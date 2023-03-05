@@ -11,5 +11,5 @@ spring:
     default-property-inclusion: non_null
 
 openai:
-  token: xxx
+  token:   #对应openai api key
   timeout: 10000
