@@ -1,0 +1,15 @@
+server:
+  port: 8080
+  tomcat:
+    max-threads: 500
+    min-spare-threads: 50
+
+spring:
+  application:
+    name: openai-starter-test
+  jackson:
+    default-property-inclusion: non_null
+
+openai:
+  token: xxx
+  timeout: 10000
