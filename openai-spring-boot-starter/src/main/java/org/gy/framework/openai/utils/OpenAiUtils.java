@@ -74,6 +74,22 @@ public class OpenAiUtils {
     public static String OPENAPI_TOKEN = "";
     public static Integer TIMEOUT = null;
 
+    public static List<CompletionChoice> getAiResult(OpenAiService service, OpenAi openAi, String prompt) {
+        CompletionRequest.CompletionRequestBuilder builder = CompletionRequest.builder()
+            .model(openAi.getModel())
+            .prompt(prompt)
+            .temperature(openAi.getTemperature())
+            .maxTokens(1000)
+            .topP(openAi.getTopP())
+            .frequencyPenalty(openAi.getFrequencyPenalty())
+            .presencePenalty(openAi.getPresencePenalty());
+        if (!StringUtils.isEmpty(openAi.getStop())) {
+            builder.stop(Arrays.asList(openAi.getStop().split(",")));
+        }
+        CompletionRequest completionRequest = builder.build();
+        return service.createCompletion(completionRequest).getChoices();
+    }
+
     /**
      * 获取ai
      *
@@ -86,19 +102,7 @@ public class OpenAiUtils {
             TIMEOUT = 3000;
         }
         OpenAiService service = new OpenAiService(OPENAPI_TOKEN, TIMEOUT);
-        CompletionRequest.CompletionRequestBuilder builder = CompletionRequest.builder()
-                .model(openAi.getModel())
-                .prompt(prompt)
-                .temperature(openAi.getTemperature())
-                .maxTokens(1000)
-                .topP(openAi.getTopP())
-                .frequencyPenalty(openAi.getFrequencyPenalty())
-                .presencePenalty(openAi.getPresencePenalty());
-        if (!StringUtils.isEmpty(openAi.getStop())) {
-            builder.stop(Arrays.asList(openAi.getStop().split(",")));
-        }
-        CompletionRequest completionRequest = builder.build();
-        return service.createCompletion(completionRequest).getChoices();
+        return getAiResult(service, openAi, prompt);
     }
 
     public static List<CompletionChoice> getAiResult(String openAiType, String... texts) {
